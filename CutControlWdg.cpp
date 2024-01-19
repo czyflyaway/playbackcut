@@ -18,6 +18,12 @@ CutControlWdg::~CutControlWdg()
     delete ui;
 }
 
+void CutControlWdg::SetMaxMinRange(double minLeft, double maxRight)
+{
+    _minLeft = minLeft;
+    _maxRight = maxRight;
+}
+
 void CutControlWdg::SetButtonSize(const QSize &size)
 {
     _buttonWidth = size.width();
@@ -37,12 +43,14 @@ void CutControlWdg::SetRange(double lower, double upper)
 void CutControlWdg::SetLeft(double left)
 {
     _left = left;
+    emit SigLeftChanged(_left);
     update();
 }
 
 void CutControlWdg::SetRight(double right)
 {
     _right = right;
+    emit SigRightChanged(_right);
     update();
 }
 
@@ -57,8 +65,8 @@ void CutControlWdg::paintEvent(QPaintEvent *event)
     int start = _buttonWidth / 2;
     int end = this->width() - _buttonWidth / 2;
 
-    int leftPos = _left * usedWidth / (_upper - _lower);
-    int rightPos = _right * usedWidth / (_upper - _lower);
+    int leftPos = (_left - _lower) * usedWidth / (_upper - _lower);
+    int rightPos = (_right - _lower) * usedWidth / (_upper - _lower);
 
     _leftButtonRect = QRect(start + leftPos - _buttonWidth / 2, 0,
                             _buttonWidth, _buttonHeight - 2);
@@ -74,7 +82,7 @@ void CutControlWdg::paintEvent(QPaintEvent *event)
         QFont font = QFont("Arial");
         font.setPixelSize(12);
         painter.setFont(font);
-        painter.drawText(_leftButtonRect, Qt::AlignCenter, tr("left"));
+        painter.drawText(_leftButtonRect, Qt::AlignCenter, _left < _right ? tr("left") : tr("right"));
         painter.restore();
     }
     {
@@ -88,7 +96,7 @@ void CutControlWdg::paintEvent(QPaintEvent *event)
         font.setPixelSize(12);
         painter.setFont(font);
         painter.setPen(Qt::black);
-        painter.drawText(_rightButtonRect, Qt::AlignCenter, tr("right"));
+        painter.drawText(_rightButtonRect, Qt::AlignCenter, _right < _left ? tr("left") : tr("right"));
         painter.restore();
     }
 }
@@ -101,7 +109,12 @@ void CutControlWdg::mouseMoveEvent(QMouseEvent *event)
 
         int currentPos = _pressPos + diff - _pressDif;
         int usedWidth = this->width() - _buttonWidth;
-        _left = currentPos * (_upper - _lower) / usedWidth;
+        _left = currentPos * (_upper - _lower) / usedWidth + _lower;
+        emit SigLeftChanged(_left);
+        if(_left < _minLeft)
+        {
+            _left = _minLeft;
+        }
         update();
     }
     else if(2 == _currentSelect)
@@ -109,7 +122,12 @@ void CutControlWdg::mouseMoveEvent(QMouseEvent *event)
         int diff = event->pos().x() - _pressPos;
         int currentPos = _pressPos + diff - _pressDif;
         int usedWidth = this->width() - _buttonWidth;
-        _right = currentPos * (_upper - _lower) / usedWidth;
+        _right = currentPos * (_upper - _lower) / usedWidth + _lower;
+        if(_right > _maxRight)
+        {
+            _right = _maxRight;
+        }
+        emit SigRightChanged(_right);
         update();
     }
 }

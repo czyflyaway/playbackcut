@@ -65,6 +65,15 @@ void InfiPlot::SetIncreaseFactor(double factor)
 {
     _marginFactor = factor;
 }
+
+qint64 InfiPlot::GetTimeMSeconds(double key)
+{
+    if(!_dataValid)
+    {
+        return 0;
+    }
+    return _timeStart + key * _internal;
+}
 void InfiPlot::IncreaseRange(double facotr)
 {
     QCPRange yRange = ui_plotWdg->yAxis->range();

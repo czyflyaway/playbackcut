@@ -59,9 +59,16 @@ void PlaybackSlider::paintEvent(QPaintEvent *event)
 
     painter.save();
     painter.setBrush(ui_rangeBrush);
-    int left = (_left / (_len *1.0)) * width;
-    int right = (_right / (_len * 1.0)) * width;
+    int left = (_left / ((_len) *1.0)) * width;
+    int right = ((_right) / ((_len) * 1.0)) * width;
     ui_rangeRect = {left, 0, right - left + 1, height()};
+    qDebug() << "_len:" << _len;
+    qDebug() << "_left:" << _left;
+    qDebug() << "_right:" << _right;
+    qDebug() << "width:" << width;
+    qDebug() << "left:" << left;
+    qDebug() << "right:" << right;
+    qDebug() << "rangeRect:" << ui_rangeRect;
     painter.drawRect(ui_rangeRect);
     painter.restore();
 

@@ -15,10 +15,14 @@ public:
     explicit CutControlWdg(QWidget *parent = nullptr);
     ~CutControlWdg();
 
+    void SetMaxMinRange(double minLeft, double maxRight);
     void SetButtonSize(const QSize& size);
     void SetRange(double lower, double upper);
     void SetLeft(double left);
     void SetRight(double right);
+public:
+    Q_SIGNAL void SigLeftChanged(double left);
+    Q_SIGNAL void SigRightChanged(double left);
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -27,6 +31,8 @@ protected:
 
 private:
     Ui::CutControlWdg *ui;
+    double _minLeft = 0;
+    double _maxRight = 100.0;
     double _lower = 0.0;
     double _upper = 100.0;
     double _left = 0.0;

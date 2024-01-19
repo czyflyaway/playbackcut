@@ -45,6 +45,7 @@ public:
 
     void ShowTimeRange(bool vis);
     void SetIncreaseFactor(double factor);
+    qint64 GetTimeMSeconds(double key);
 private:
     void IncreaseRange(double facotr);
     void CheckMouseIsIn();

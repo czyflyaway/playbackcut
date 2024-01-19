@@ -27,5 +27,6 @@ private slots:
 private:
     Ui::Widget *ui;
     QCustomPlot *customPlot = nullptr;
+    QCPItemRect *ui_cutRect = nullptr;
 };
 #endif // WIDGET_H
