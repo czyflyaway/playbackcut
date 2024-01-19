@@ -85,12 +85,14 @@ void Widget::SlotXRangeChanged(QCPRange range)
 {
     qDebug() << "SlotXRangeChanged-----:";
     qDebug() << "range:" << range.lower << "," << range.upper;
+    ui->wdg_move->SetRange(range.lower, range.upper);
     double l = range.lower < 0 ? 0 : range.lower;
     double r = range.upper > 250 ? 250 : range.upper;
 //    customPlot->xAxis->setRange(l, r);
     ui->slider->SetRange(l, r);
     qDebug() << "range:" << range.lower << "," << range.upper;
     qDebug() << "-----SlotXRangeChanged:";
+
 }
 
 
@@ -118,8 +120,16 @@ void Widget::on_pushButton_clicked()
 //    rightLine->setPen(QPen(Qt::red));
 //    customPlot->replot();
 
+    ui->slider->SetLength(250);
 
-
+    QVector<double> x(251), y0(251), y1(251);
+    for (int i=0; i<251; ++i)
+    {
+        x[i] = i;
+        y0[i] = qExp(-i/150.0)*qCos(i/10.0) + 3; // exponentially decaying cosine
+        //    y1[i] = qExp(-i/150.0) + 3;              // exponential envelope
+    }
+    ui->chart->SetData(y0, 0);
 
 }
 
